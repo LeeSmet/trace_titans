@@ -2,6 +2,8 @@ use std::{collections::BTreeMap, fs};
 
 use receipt::{MintingReceipt, ResourceRewards};
 
+use crate::period::STANDARD_PERIOD_DURATION;
+
 mod period;
 mod receipt;
 
@@ -90,7 +92,7 @@ fn main() -> Result<(), Box<dyn std::error::Error + 'static>> {
                     farming_policy: receipt.farming_policy_id,
                     uptime_percentage: u32::min(
                         (receipt.measured_uptime * 100 * PERCENTAGE_PRECISION as u64
-                            / receipt.period.duration()) as u32,
+                            / STANDARD_PERIOD_DURATION) as u32,
                         100 * PERCENTAGE_PRECISION,
                     ),
                     expected_payout: calculate_expected_titan_reward(&receipt),
@@ -171,8 +173,9 @@ fn calculate_expected_titan_reward(receipt: &MintingReceipt) -> u64 {
     // actually mUSD / TFT_PRECISION
     let full_tft_reward = full_musd_reward_upscaled / receipt.tft_connection_price;
 
-    // scale
-    full_tft_reward * receipt.measured_uptime / (receipt.period.duration())
+    // scale, use default period duration so we account for nodes which did not come online until
+    // the period already started
+    full_tft_reward * receipt.measured_uptime / STANDARD_PERIOD_DURATION
 }
 
 /// Format a percentage with 3 digits of precision

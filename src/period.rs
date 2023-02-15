@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 /// Timestamp of the start of the first period.
 const FIRST_PERIOD_START_TIMESTAMP: i64 = 1522501000;
 /// The duration of a standard period, as used by the minting payouts, in seconds.
-const STANDARD_PERIOD_DURATION: u64 = 24 * 60 * 60 * (365 * 3 + 366 * 2) / 60;
+pub const STANDARD_PERIOD_DURATION: u64 = 24 * 60 * 60 * (365 * 3 + 366 * 2) / 60;
 
 /// A period represents a timestamp used by the minting process.
 ///
